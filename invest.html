@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Page</title>
+</head>
+
+<body>
+
+    <h1>Investment Page</h1>
+
+    <form>
+        <label for="investmentAmount">Enter Investment Amount:</label>
+        <input type="number" id="investmentAmount" name="investmentAmount" placeholder="Enter amount" required>
+        <br>
+        <button type="button" onclick="invest()">Invest</button>
+    </form>
+
+    <script>
+        async function invest() {
+            try {
+                var amountInvested = document.getElementById("investmentAmount").value;
+
+                // Make an HTTP POST request to the server
+                const response = await fetch('http://localhost:3000/invest', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId:"guw8xD4HglurQCx48Zob",
+                        amount: amountInvested,
+                        // status:"pending",
+                        // startTime: 0,
+                        endTime: 30
+                        // Add other required parameters like userId, startTime, endTime if needed
+                    }),
+                });
+
+                if (response.ok) {
+                    alert("Investment successful!");
+                } else {
+                    alert("Error during investment. Please try again.");
+                }
+            } catch (error) {
+                console.error(error);
+                alert("An error occurred. Please try again later.");
+            }
+        }
+    </script>
+
+</body>
+
+</html>
