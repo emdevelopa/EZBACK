@@ -4,22 +4,22 @@ const uuid = require("uuid");
 const moment = require("moment");
 const investRouter = express.Router();
 
-const updateStartDate = (startDate, endDate) => {
-  startDate = moment(startDate); // Convert to moment object
-  const intervalId = setInterval(() => {
-    if (startDate.isSameOrAfter(endDate)) {
-      clearInterval(intervalId); // Stop the interval when startDate is after or equal to endDate
-    } else {
-      console.log(
-        "Updated startDate:",
-        startDate.format("YYYY-MM-DD HH:mm:ss")
-      );
-      startDate.add(1, "minute");
-    }
-  }, 2000); // 60000 milliseconds = 1 minute
+// const updateStartDate = (startDate, endDate) => {
+//   startDate = moment(startDate); // Convert to moment object
+//   const intervalId = setInterval(() => {
+//     if (startDate.isSameOrAfter(endDate)) {
+//       clearInterval(intervalId); // Stop the interval when startDate is after or equal to endDate
+//     } else {
+//       console.log(
+//         "Updated startDate:",
+//         startDate.format("YYYY-MM-DD HH:mm:ss")
+//       );
+//       startDate.add(1, "minute");
+//     }
+//   }, 2000); // 60000 milliseconds = 1 minute
 
-  return startDate.format("YYYY-MM-DD HH:mm:ss");
-};
+//   return startDate.format("YYYY-MM-DD HH:mm:ss");
+// };
 
 investRouter.post("/invest", async (req, res) => {
   const currentUtcTime = moment().utc();
