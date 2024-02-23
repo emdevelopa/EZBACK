@@ -30,10 +30,10 @@ investRouter.post("/invest", async (req, res) => {
       endDate,
     };
 
-    // const updatedInvestments = currentInvestments.concat(newInvestment);
+    const updatedInvestments = currentInvestments.concat(newInvestment);
    
     await walletRef.update({
-      investments: newInvestment,
+      investments: updatedInvestments,
     });
 
     res.status(200).send("Investment added successfully");
