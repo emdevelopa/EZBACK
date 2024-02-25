@@ -29,6 +29,7 @@ investRouter.post("/invest", async (req, res) => {
       amount,
       startDate,
       endDate,
+      status:"pending"
     };
 
     const updatedInvestments = currentInvestments.concat(newInvestment);

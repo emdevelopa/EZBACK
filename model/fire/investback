@@ -1,46 +1,69 @@
-  if (!walletDoc.exists) {
-      return res.status(404).send("User not found");
-    }
+if (!walletDoc.exists) {
+  return res.status(404).send("User not found");
+}
 
-    const investments = walletDoc.data().investments || [];
-    const currentDate = new Date();
-    const currentSeconds = currentDate.getSeconds();
+const investments = walletDoc.data().investments || [];
+const currentDate = new Date();
+const currentSeconds = currentDate.getSeconds();
 
-    const newInvestment = {
-      _id: uuid.v4(),
-      status: "pending",
-      amount: parseFloat(amount),
-      startTime: currentSeconds,
-      endTime: currentSeconds + endTime,
-      amountInReturn: 110,
-      ROI: 0,
-    };
+const newInvestment = {
+  _id: uuid.v4(),
+  status: "pending",
+  amount: parseFloat(amount),
+  startTime: currentSeconds,
+  endTime: currentSeconds + endTime,
+  amountInReturn: 110,
+  ROI: 0,
+};
 
-    investments.push(newInvestment);
+investments.push(newInvestment);
 
-    await walletRef.update({
-      investments: investments,
-    });
+await walletRef.update({
+  investments: investments,
+});
 
-    // Create an interval to update `startTime` and check for completion efficiently
-    const intervalId = setInterval(async () => {
-      const updatedWalletDoc = await walletRef.get();
-      const updatedInvestments = updatedWalletDoc.data().investments || [];
+// Create an interval to update `startTime` and check for completion efficiently
+const intervalId = setInterval(async () => {
+  const updatedWalletDoc = await walletRef.get();
+  const updatedInvestments = updatedWalletDoc.data().investments || [];
 
-      // Update pending investments directly in Firestore, improving efficiency
-      await walletRef.update({
-        investments: updatedInvestments.map((investment) => {
-          if (investment.status === "pending") {
-            investment.startTime++;
-            if (investment.startTime >= investment.endTime) {
-              investment.status = "successful";
-              clearInterval(activeIntervals.get(investment._id));
-              activeIntervals.delete(investment._id);
-            }
-          }
-          return investment;
-        }),
-      });
-    }, 1000 * 60);
+  // Update pending investments directly in Firestore, improving efficiency
+  await walletRef.update({
+    investments: updatedInvestments.map((investment) => {
+      if (investment.status === "pending") {
+        investment.startTime++;
+        if (investment.startTime >= investment.endTime) {
+          investment.status = "successful";
+          clearInterval(activeIntervals.get(investment._id));
+          activeIntervals.delete(investment._id);
+        }
+      }
+      return investment;
+    }),
+  });
+}, 1000 * 60);
 
-    activeIntervals.set(newInvestment._id, intervalId);
+activeIntervals.set(newInvestment._id, intervalId);
+
+//
+// // Make an HTTP POST request to the server
+// const response = await fetch('http://localhost:3000/invest', {
+//     method: 'POST',
+//     headers: {
+//         'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({
+//         userId:"guw8xD4HglurQCx48Zob",
+//         amount: amountInvested,
+//         // status:"pending",
+//         // startTime: 0,
+//         endTime: 30
+//         // Add other required parameters like userId, startTime, endTime if needed
+//     }),
+// });
+
+// if (response.ok) {
+//     console.log("Investment successful!");
+// } else {
+//     alert("Error during investment. Please try again.");
+// }
