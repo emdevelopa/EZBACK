@@ -35,86 +35,37 @@
         </table>
     </div>
 
-<script>
-    async function invest() {
-        try {
+    <script>
+        async function invest() {
             var amountInvested = document.getElementById("investmentAmount").value;
 
-            // Retrieve existing data from local storage
-            const storedData = localStorage.getItem("wallets") || "[]";
-            const data = JSON.parse(storedData);
-
-            let user = {
-                balance: 20000,
-                amountInvested,
-                status: "pending",
-                start: 0,
-                end: 0 + 30
-            };
-
-            // Add the new user data to the existing array
-            data.push(user);
-
-            // Store the initial array back to local storage
-            localStorage.setItem("wallets", JSON.stringify(data));
-
-            // Display the investment data
-            displayInvestments(data);
-
-            // Set interval to update the start value
-            const intervalId = setInterval(() => {
-                // Update start values at intervals here
-                data.forEach((user) => {
-                    if (user.status === "pending") {
-                        user.start++;
-
-                        // Check if start is equal to end
-                        if (user.start === user.end) {
-                            // Update the status to "successful" only once
-                            if (user.status !== "successful") {
-                                user.status = "successful";
-                                console.log("Investment successful!", data);
-                            }
-                        }
-                    }
+            try {
+                // Make an HTTP POST request to the server
+                const response = await fetch('http://localhost:3000/invest', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: "guw8xD4HglurQCx48Zob",
+                        amount: amountInvested,
+                        // status:"pending",
+                        // startTime: 0,
+                        endTime: 30
+                        // Add other required parameters like userId, startTime, endTime if needed
+                    }),
                 });
 
-                // Store the updated array back to local storage
-                localStorage.setItem("wallets", JSON.stringify(data));
-
-                // Display the investment data
-                displayInvestments(data);
-
-                // Check if all investments are successful
-                const allSuccessful = data.every(user => user.status === "successful");
-
-                // If all investments are successful, clear the interval
-                if (allSuccessful) {
-                    clearInterval(intervalId);
+                if (response.ok) {
+                    console.log("Investment successful!");
+                } else {
+                    alert("Error during investment. Please try again.");
                 }
-
-                console.log("Start values updated:", data);
-            }, 1000);
-        } catch (error) {
-            console.error(error);
-            alert("An error occurred. Please try again later.");
+            } catch (error) { 
+                console.log(error);
+            }
         }
-    }
-
-    function displayInvestments(data) {
-        const tableBody = document.getElementById("investmentTableBody");
-        tableBody.innerHTML = ""; // Clear the previous content
-
-        data.forEach((user) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `<td>${user.amountInvested}</td>
-                            <td>${user.status}</td>
-                            <td>${user.start}</td>
-                            <td>${user.end}</td>`;
-            tableBody.appendChild(row);
-        });
-    }
-</script>
+    </script>
 
 </body>
 
