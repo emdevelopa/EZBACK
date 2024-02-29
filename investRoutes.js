@@ -22,7 +22,7 @@ investRouter.post("/invest", async (req, res) => {
     const walletRef = firestore.collection("wallets").doc(userId);
     const walletDoc = await walletRef.get();
 
-    console.log(walletDoc.data());
+    // console.log(walletDoc.data());
 
     let availableBalance  = walletDoc.data().walletBalance - amount
     // Check if there's already an investment in process
@@ -109,7 +109,7 @@ investRouter.post("/invest", async (req, res) => {
           ),
         });
       }
-    }, 1000);
+    }, 10000);
 
     res.status(200).send("Investment added successfully");
   } catch (error) {
