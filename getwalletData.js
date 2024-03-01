@@ -24,7 +24,7 @@ rout.get("/getWallet/:walletId", async (req, res) => {
     res.send(data);
   } catch (error) {
     console.error("Error fetching wallet data:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error", });
   }
 });
 
