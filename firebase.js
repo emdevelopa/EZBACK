@@ -1,6 +1,6 @@
 // firebase.js
 const admin = require("firebase-admin");
-const serviceAccount = require("./ser.json");
+const serviceAccount = require("./ser");
 
 async function initFirebase() {
   try {
